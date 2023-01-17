@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const routinesSchema = new Schema({
+
+const routineSchema = new Schema({
     title: {
         type: String
     },
@@ -9,11 +10,11 @@ const routinesSchema = new Schema({
         type: String
     },
     time: {
-        type: Number
+        type: String
     },
-    day: {
-        type: Sting,
+    weekChecked: {
+        type: Object
     }
 });
 
-module.exports = mongoose.model('Routines', routinesSchema);
+module.exports = mongoose.model('routine', routineSchema);
