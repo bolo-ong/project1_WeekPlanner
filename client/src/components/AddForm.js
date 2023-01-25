@@ -1,10 +1,7 @@
 import { useRef, useEffect, useState } from "react";
 
 
-const week = ['월', '화', '수', '목', '금', '토', '일']
-
 function AddForm({ addForm, setAddForm }) {
-
     const inputRef = useRef();
     useEffect(() => {
         inputRef.current.focus();
@@ -29,14 +26,15 @@ function AddForm({ addForm, setAddForm }) {
     };
 
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
         const data = {}
         for (const [key, value] of formData) {
             data[key] = value
         }
-        data['weekChecked'] = weekChecked;
+
+        data['weekCheck'] = weekCheck;
 
         fetch(`${process.env.REACT_APP_SERVER_URL}/routine`, {
             method: 'POST',
@@ -48,11 +46,12 @@ function AddForm({ addForm, setAddForm }) {
             .catch(error => {
                 console.error(error)
             })
+
+        closeModal();
     }
 
 
-
-    const [weekChecked, setWeekChecked] = useState({
+    const [weekCheck, setWeekCheck] = useState({
         "월": false,
         "화": false,
         "수": false,
@@ -61,17 +60,21 @@ function AddForm({ addForm, setAddForm }) {
         "토": false,
         "일": false
     });
+    const week = Object.keys(weekCheck)
 
-    const handleWeekChecked = (e) => {
-        setWeekChecked({
-            ...weekChecked,
-            [e.target.id]: e.target.checked
-        });
+    const handleWeekCheck = (e) => {
+        const copy = { ...weekCheck };
+        copy[e.target.id] = e.target.checked;
+        setButtonUiController(Object.values(copy).includes(true))
+        setWeekCheck(copy)
     }
 
+    const [buttonUiController, setButtonUiController] = useState(false)
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={(e) => {
+            handleSubmit(e)
+        }}>
             <div className="fixed w-full h-full z-10">
                 <div className="w-full h-full bg-black opacity-80"
                     onClick={() => {
@@ -115,13 +118,16 @@ function AddForm({ addForm, setAddForm }) {
                                     <input
                                         type='checkbox'
                                         id={data}
-                                        onClick={handleWeekChecked}
+                                        onClick={handleWeekCheck}
                                     />
                                     <label htmlFor={data}>{data}</label>
                                 </div>
                             )}
                         </div>
-                        <button type="submit" className="cursor-pointer w-full py-1.5 mt-3 bg-blue-600 text-white font-medium text-sm rounded shadow-md hover:bg-blue-700  focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg">기록</button>
+                        {
+                            buttonUiController === false ? <button disabled className="pointer-events-none w-full py-1.5 mt-3 text-white font-medium text-sm rounded shadow-md bg-red-400 focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg">요일을 선택해 주세요</button>
+                                : <button className="cursor-pointer w-full py-1.5 mt-3 text-white font-medium text-sm rounded shadow-md bg-blue-600 hover:bg-blue-700  focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg">기록</button>
+                        }
                     </div>
                 </div>
             </div>

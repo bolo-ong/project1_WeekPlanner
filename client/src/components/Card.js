@@ -1,5 +1,4 @@
 import { useState } from "react";
-import AddForm from './AddForm';
 
 function Card({ addForm, setAddForm }) {
 

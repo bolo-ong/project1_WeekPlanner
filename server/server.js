@@ -4,7 +4,7 @@ const app = express();
 const mongoose = require('./schemas');
 const port = process.env.PORT;
 
-const routineRouter = require('./routes/routine')
+const routineRouter = require('./routes/routineRoutes')
 
 
 app.use(cors());

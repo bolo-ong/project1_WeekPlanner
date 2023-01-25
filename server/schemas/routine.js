@@ -12,7 +12,7 @@ const routineSchema = new Schema({
     time: {
         type: String
     },
-    weekChecked: {
+    weekCheck: {
         type: Object
     }
 });
