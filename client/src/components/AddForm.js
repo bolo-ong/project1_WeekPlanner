@@ -1,12 +1,15 @@
 import { useRef, useEffect, useState } from "react";
 
 
-function AddForm({ addForm, setAddForm }) {
+function AddForm({ setAddForm, setRoutines, routines }) {
     const inputRef = useRef();
+    const closeModal = () => {
+        setAddForm(false)
+    };
+
     useEffect(() => {
         inputRef.current.focus();
     }, [])
-
 
     const handleKeyDown = (e) => {
         if (e.key === 'Escape') {
@@ -20,34 +23,32 @@ function AddForm({ addForm, setAddForm }) {
         };
     }, []);
 
-
-    const closeModal = () => {
-        setAddForm(false)
-    };
-
-
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const formData = new FormData(e.target);
-        const data = {}
-        for (const [key, value] of formData) {
-            data[key] = value
+        try {
+            const formData = new FormData(e.target);
+            const data = {}
+            for (const [key, value] of formData) {
+                data[key] = value
+            }
+            data['weekCheck'] = weekCheck;
+            await fetch(`${process.env.REACT_APP_SERVER_URL}/routine`, {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            });
+            // const res = await fetch(`${process.env.REACT_APP_SERVER_URL}/routine`)
+            // const resData = await res.json();
+            // await setRoutines(resData)
+            console.log(data)
+            await setRoutines([...routines, data]);
+            console.log(routines)
+            closeModal();
+        } catch (error) {
+            console.error(error);
         }
-
-        data['weekCheck'] = weekCheck;
-
-        fetch(`${process.env.REACT_APP_SERVER_URL}/routine`, {
-            method: 'POST',
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(data)
-        })
-            .catch(error => {
-                console.error(error)
-            })
-
-        closeModal();
     }
 
 
@@ -72,9 +73,7 @@ function AddForm({ addForm, setAddForm }) {
     const [buttonUiController, setButtonUiController] = useState(false)
 
     return (
-        <form onSubmit={(e) => {
-            handleSubmit(e)
-        }}>
+        <form onSubmit={handleSubmit}>
             <div className="fixed w-full h-full z-10">
                 <div className="w-full h-full bg-black opacity-80"
                     onClick={() => {
@@ -118,7 +117,7 @@ function AddForm({ addForm, setAddForm }) {
                                     <input
                                         type='checkbox'
                                         id={data}
-                                        onClick={handleWeekCheck}
+                                        onChange={handleWeekCheck}
                                     />
                                     <label htmlFor={data}>{data}</label>
                                 </div>

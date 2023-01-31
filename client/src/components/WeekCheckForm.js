@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 
 
-function WeekCheckForm({ day }) {
+function WeekCheckForm({ day, setCheckedDays }) {
     const [weekCheck, setWeekCheck] = useState({
         "월": false,
         "화": false,
@@ -13,17 +13,29 @@ function WeekCheckForm({ day }) {
     });
 
     const week = Object.entries(weekCheck)
-    const today = week[day - 1][0]
+    const today = week[(day - 1 + 7) % 7][0];
+
+    const updateCheckedDays = (copy) => {
+        const checkedDays = Object.entries(copy)
+            .filter(([day, isChecked]) => isChecked)
+            .map(([day]) => day);
+        setCheckedDays(checkedDays)
+    }
 
     useEffect(() => {
-        weekCheck[today] = true;
-        setWeekCheck({ ...weekCheck });
+        const copy = { ...weekCheck };
+        copy[today] = true;
+        setWeekCheck(copy);
+
+        updateCheckedDays(copy);
     }, []);
 
     const handleWeekCheck = (e) => {
         const copy = { ...weekCheck };
         copy[e.target.id] = e.target.checked;
         setWeekCheck(copy);
+
+        updateCheckedDays(copy);
     }
 
 
@@ -35,7 +47,7 @@ function WeekCheckForm({ day }) {
                         type='checkbox'
                         id={data[0]}
                         checked={data[1]}
-                        onClick={handleWeekCheck}
+                        onChange={handleWeekCheck}
                     />
                     <label htmlFor={data[0]}>{data[0]}</label>
                 </div>

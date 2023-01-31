@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-function Card({ addForm, setAddForm }) {
+function Card({ addForm, setAddForm, routines, todayRoutines }) {
 
     const [nutrients, setNutrients] = useState(['Omega-3', 'multivitimin', 'test', 'test', 'Omega-3', 'multivitimin', 'test', 'test', 'Omega-3', 'multivitimin', 'test', 'test'])
 
@@ -18,16 +18,16 @@ function Card({ addForm, setAddForm }) {
                 </div>
 
                 {
-                    nutrients.map((data, i) => {
+                    todayRoutines.map((data, i) => {
                         return (
-                            <div className="p-4  sm:w-1/2 md:w-1/3 lg:w-1/4">
+                            <div className="p-4 sm:w-1/2 md:w-1/3 lg:w-1/4" key={i}>
                                 <div className=" hover:scale-101 rounded-lg bg-gray-100 p-6 shadow-lg hover:shadow-indigo-500/30 cursor-pointer" style={{ opacity: `100%` }}>
                                     <div className="flex mb-3">
-                                        <h2 className="text-gray-900 text-base font-medium max-md:text-sm">{data}</h2>
-                                        <p className=" text-indigo-500 ml-2 text-sm max-md:text-xs">시간</p>
+                                        <h2 className="text-gray-900 text-base font-medium max-md:text-sm">{data.title}</h2>
+                                        <p className=" text-indigo-500 ml-2 text-sm max-md:text-xs">{data.time}</p>
                                     </div>
                                     <div className=" text-gray-600">
-                                        <p className="text-sm break-keep">Blue bottle crucifix vinyl post-ironic four dollar toast vegan taxidermy. Gastropub indxgo juice poutine.</p>
+                                        <p className="text-sm break-keep">{data.description}</p>
                                     </div>
                                 </div>
                             </div>
