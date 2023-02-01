@@ -39,12 +39,11 @@ function AddForm({ setAddForm, setRoutines, routines }) {
                 },
                 body: JSON.stringify(data)
             });
-            // const res = await fetch(`${process.env.REACT_APP_SERVER_URL}/routine`)
-            // const resData = await res.json();
-            // await setRoutines(resData)
-            console.log(data)
+            const res = await fetch(`${process.env.REACT_APP_SERVER_URL}/routine`)
+            const resData = await res.json();
+            await setRoutines(resData)
             await setRoutines([...routines, data]);
-            console.log(routines)
+
             closeModal();
         } catch (error) {
             console.error(error);
