@@ -27,6 +27,7 @@ function AddForm({ setAddForm, setRoutines, routines }) {
         e.preventDefault();
         try {
             const formData = new FormData(e.target);
+            console.log(formData)
             const data = {}
             for (const [key, value] of formData) {
                 data[key] = value
@@ -39,10 +40,11 @@ function AddForm({ setAddForm, setRoutines, routines }) {
                 },
                 body: JSON.stringify(data)
             });
-            const res = await fetch(`${process.env.REACT_APP_SERVER_URL}/routine`)
-            const resData = await res.json();
-            await setRoutines(resData)
-            await setRoutines([...routines, data]);
+            // const res = await fetch(`${process.env.REACT_APP_SERVER_URL}/routine`)
+            // const resData = await res.json();
+            const newRoutines = [...routines, data]
+            newRoutines.sort((a, b) => new Date("1970/01/01 " + a.time) - new Date("1970/01/01 " + b.time))
+            await setRoutines(newRoutines);
 
             closeModal();
         } catch (error) {
@@ -79,7 +81,7 @@ function AddForm({ setAddForm, setRoutines, routines }) {
                         setAddForm(false)
                     }}></div>
 
-                <div className="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2">
+                <div className="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 ">
                     <button className="float-right m-1 mr-3"
                         onClick={() => {
                             setAddForm(false)
@@ -94,8 +96,9 @@ function AddForm({ setAddForm, setRoutines, routines }) {
                                     placeholder="Title"
                                     type="text"
                                     name="title"
+                                    required
                                 />
-                                <input className="ml-1 mt-1 p-1 w-min  bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md focus:ring-1"
+                                <input className="ml-1 mt-1 p-1 w-32 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md focus:ring-1"
                                     type="time"
                                     name="time"
                                 />
@@ -123,7 +126,7 @@ function AddForm({ setAddForm, setRoutines, routines }) {
                             )}
                         </div>
                         {
-                            buttonUiController === false ? <button disabled className="pointer-events-none w-full py-1.5 mt-3 text-white font-medium text-sm rounded shadow-md bg-red-400 focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg">요일을 선택해 주세요</button>
+                            buttonUiController === false ? <button disabled className="pointer-events-none w-full py-1.5 mt-3 text-white font-medium text-sm rounded shadow-md bg-gray-300 focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg">요일을 선택해 주세요</button>
                                 : <button className="cursor-pointer w-full py-1.5 mt-3 text-white font-medium text-sm rounded shadow-md bg-blue-600 hover:bg-blue-700  focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg">기록</button>
                         }
                     </div>

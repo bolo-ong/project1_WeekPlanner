@@ -23,6 +23,7 @@ function Service() {
             try {
                 const res = await fetch(`${process.env.REACT_APP_SERVER_URL}/routine`)
                 const data = await res.json();
+                data.sort((a, b) => new Date("1970/01/01 " + a.time) - new Date("1970/01/01 " + b.time))
                 setRoutines(data);
             } catch (error) {
                 console.error(error);
@@ -45,7 +46,6 @@ function Service() {
     function progressBar(hour, min) {
         hour = isNaN(hour) ? 0 : hour;
         min = isNaN(min) ? 0 : min;
-
         return (hour * 60 + min) / 60 / 24 * 100;
     }
 
@@ -60,8 +60,8 @@ function Service() {
                 addForm === true && <AddForm setAddForm={setAddForm} setRoutines={setRoutines} routines={routines} />
             }
             <Header />
-            <div className='h-[90vh] container mx-auto flex'>
-                <div className='relative flex flex-col-reverse mx-8 mt-8 mb-3 w-2.5 bg-gray-300 rounded-full'>
+            <div className='min-h-[90vh] container mx-auto flex'>
+                <div className='relative flex flex-col-reverse mx-8 mt-10 mb-3 w-2.5 bg-gray-300 rounded-full'>
                     <div className='w-2.5 bg-indigo-300 rounded-full' style={{ height: `${progressBar(hour, min)}%` }}></div>
                     {todayRoutines.map((data, i) =>
                         <>
