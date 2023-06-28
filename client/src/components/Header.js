@@ -1,21 +1,69 @@
 import { Link } from "react-router-dom";
+import { useState } from 'react';
+import AuthForm from '../components/AuthForm';
+import SignInContext from '../contexts/SignInCheckContext/SignInCheckContext';
+
 
 
 function Header() {
 
+    const [authForm, setAuthForm] = useState(false)
+
     return (
-        <header class="text-gray-600 body-font shadow-xl">
-            <div class="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
-                <div class="flex title-font font-medium items-center text-gray-900 mb-4 md:mb-0">
-                    <Link to="/" class="ml-3 text-xl hover:cursor-pointer">Tailblocks</Link>
+        <>
+            {
+                authForm === true && <AuthForm setAuthForm={setAuthForm} />
+            }
+
+
+            <header className="text-gray-600 body-font shadow-xl">
+                <div className="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
+                    <div className="flex title-font font-medium items-center text-gray-900 mb-4 md:mb-0">
+                        <Link to="/" className="ml-3 text-xl hover:cursor-pointer">Tailblocks</Link>
+                    </div>
+                    <nav className="md:ml-auto flex flex-wrap items-center text-base justify-center">
+                        <Link to='/service' className="mr-5 hover:text-gray-900 cursor-pointer">Routines</Link>
+                        <Link to='/posts' className="mr-5 hover:text-gray-900 cursor-pointer">Posts</Link>
+
+                        <SignInContext.Consumer>
+                            {({ isSignIn, setIsSignIn }) => (
+                                <>
+                                    {isSignIn === null ? (
+                                        <div></div>
+                                    ) : isSignIn ? (
+                                        <div className="mr-5 hover:text-gray-900 cursor-pointer"
+                                            onClick={async () => {
+                                                try {
+                                                    await fetch(`${process.env.REACT_APP_SERVER_URL}/user/signout`, {
+                                                        headers: {
+                                                            'Content-Type': 'application/json'
+                                                        },
+                                                        credentials: 'include'
+                                                    });
+                                                } catch (error) {
+                                                    console.error(error);
+                                                }
+                                                setIsSignIn(false);
+                                            }}>
+                                            Sign out
+                                        </div>
+                                    ) : (
+                                        <div className="mr-5 hover:text-gray-900 cursor-pointer"
+                                            onClick={() => {
+                                                setAuthForm(true);
+                                            }}>
+                                            Sign in
+                                        </div>
+                                    )}
+                                </>)}
+                        </SignInContext.Consumer>
+
+
+
+                    </nav>
                 </div>
-                <nav class="md:ml-auto flex flex-wrap items-center text-base justify-center">
-                    <Link to='/service' class="mr-5 hover:text-gray-900 cursor-pointer">SERVICE</Link>
-                    <Link to='/posts' class="mr-5 hover:text-gray-900 cursor-pointer">POSTS</Link>
-                    <Link to='/' class="mr-5 hover:text-gray-900 cursor-pointer">MY</Link>
-                </nav>
-            </div>
-        </header>
+            </header>
+        </>
     )
 }
 

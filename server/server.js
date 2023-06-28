@@ -1,19 +1,30 @@
+require('dotenv').config();
+const port = process.env.PORT;
+const dbUrl = process.env.DB_URL;
 const express = require('express');
 const cors = require('cors');
 const app = express();
-const mongoose = require('./schemas');
-const port = process.env.PORT;
+const cookieParser = require('cookie-parser');
+const routes = require('./routes');
+const mongoose = require('mongoose');
 
-const routineRouter = require('./routes/routineRoutes')
 
+mongoose.connect(dbUrl, { useNewUrlParser: true, useUnifiedTopology: true });
 
-app.use(cors());
-app.use(express.json());
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function () {
+    console.log("MongoDB Connected!");
+});
 
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
 });
 
-app.use('/routine', routineRouter)
-
-console.log(process.env.PORT)
+app.use(cors({
+    origin: `http://localhost:3000`,
+    credentials: true
+}));
+app.use(express.json());
+app.use(cookieParser());
+app.use('/', routes);

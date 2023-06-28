@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
+import { v4 as uuidv4 } from 'uuid';
 
-
-function WeekCheckForm({ day, setCheckedDays }) {
+function WeekCheckForm({ day, setCheckedDays, routines }) {
     const [weekCheck, setWeekCheck] = useState({
         "월": false,
         "화": false,
@@ -42,7 +42,7 @@ function WeekCheckForm({ day, setCheckedDays }) {
     return (
         <div className="flex mt-7 ml-9">
             {week.map((data, i) =>
-                <div className="p-2" key={i}>
+                <div className="p-2" key={uuidv4()}>
                     <input
                         type='checkbox'
                         id={data[0]}

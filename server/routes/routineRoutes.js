@@ -1,26 +1,15 @@
 const express = require('express');
-const router = express.Router();
-const Routine = require('../schemas/routine');
+const routineRouter = express.Router();
+const { getRoutine, createRoutine, updateRoutine, deleteRoutine } = require('../controllers/routineController');
+const auth = require("../middlewares/auth");
 
-router.post('/', (req, res) => {
-    console.log(req.body)
-    const routine = new Routine(req.body);
-    try {
-        routine.save()
-        res.status(200).json(routine);
-    }
-    catch (err) {
-        res.status(500).send(err);
-    }
-});
+routineRouter.get('/:_id?', auth, getRoutine)
 
-router.get('/', async (req, res) => {
-    try {
-        const data = await Routine.find();
-        res.json(data);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-});
+routineRouter.post('/', auth, createRoutine)
 
-module.exports = router;
+routineRouter.put('/:_id', auth, updateRoutine)
+
+routineRouter.delete('/:_id', auth, deleteRoutine)
+
+
+module.exports = routineRouter;
