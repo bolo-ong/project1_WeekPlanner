@@ -1,5 +1,5 @@
 import { useRef, useEffect, useState, useContext } from "react";
-import { Formik, Field, Form, useFormik } from "formik"
+import { useFormik } from "formik"
 import * as yup from "yup"
 import SignInContext from '../contexts/SignInCheckContext/SignInCheckContext';
 
@@ -10,16 +10,18 @@ function AuthForm({ setAuthForm }) {
     const [showPw, setShowPw] = useState(false)
     const inputRef = useRef();
 
+    //폼이 열리면, ID 입력란에 자동 포커스 되어 유저가 바로 입력할 수 있도록 구현
     useEffect(() => {
         inputRef.current.focus();
     }, [])
 
+    //esc키로 폼을 닫을 수 있도록 구현
     const handleKeyDown = (e) => {
         if (e.key === 'Escape') {
             setAuthForm(false)
         }
     };
-    useEffect(() => {
+    useEffect(() => { //폼을 닫은 후에도 이벤트가 남아서 램을 낭비하지 않도록 이벤트를 삭제
         document.addEventListener('keydown', handleKeyDown);
         return () => {
             document.removeEventListener('keydown', handleKeyDown);
@@ -27,7 +29,7 @@ function AuthForm({ setAuthForm }) {
     }, []);
 
 
-
+    //유효성 검증
     const validationSchema = yup.object().shape({
         userId: yup
             .string()
@@ -43,11 +45,14 @@ function AuthForm({ setAuthForm }) {
             .max(20, '20자 이내로 작성해 주세요.')
     })
 
+    //폼의 기본값 설정
     const formik = useFormik({
         initialValues: {
             userId: '',
             pw: '',
         },
+
+        //signIn버튼과 singUp버튼을 클릭 시, 로그인 or 회원가입 기능 구현
         onSubmit: async (values) => {
             const { action, ...requestData } = values;
             try {
@@ -63,11 +68,11 @@ function AuthForm({ setAuthForm }) {
                     if (res.ok) {
                         setIsSignIn(true);
                         setAuthForm(false);
-                    } else if (res.status === 404) {
+                    } else if (res.status === 404) { //id 오류 시 에러메세지 생성
                         const data = await res.json();
                         const errorMessage = data.message;
                         formik.setFieldError('userId', errorMessage);
-                    } else if (res.status === 400) {
+                    } else if (res.status === 400) {//pw 오류 시 에러메세지 생성
                         const data = await res.json();
                         const errorMessage = data.message;
                         formik.setFieldError('pw', errorMessage);

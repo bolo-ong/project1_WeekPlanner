@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 
-function Card({ addForm, setAddForm, routines, todayRoutines, editForm, setEditForm, setSelectedCardId }) {
+function Card({ setAddForm, todayRoutines, setEditForm, setSelectedCardId }) {
     return (
         <>
             <div className="w-[80vw] flex flex-wrap -m-4 px-5 py-10 mx-auto">

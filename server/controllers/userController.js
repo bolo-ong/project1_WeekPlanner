@@ -6,20 +6,6 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 
-// const accessToken = async (req, res) => {
-//     try {
-//         const token = req.cookies.accessToken
-//         const data = jwt.verify(token, ACCESS_TOKEN_SECRET)
-
-//         const userData = await User.findOne({ userId: data.userId })
-//         const { pw, ...others } = userData.toObject();
-
-//         res.status(200).json(others);
-//     } catch (error) {
-//         res.status(500).json({ message: error.message });
-//     }
-// }
-
 const refreshToken = async (req, res) => {
     try {
         const token = req.cookies.refreshToken

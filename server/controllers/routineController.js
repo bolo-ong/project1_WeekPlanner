@@ -8,16 +8,15 @@ const getRoutine = async (req, res) => {
 
         let data;
 
-        if (selectedCardId) {
+        if (selectedCardId) { //루틴카드를 선택시, 해당 루틴의 데이터 전송
             data = await Routine.findOne({ _id: selectedCardId });
-            const { createBy, ...others } = data.toObject();
-            return res.json(others);
+            return res.json(data);
         }
 
-        if (userData) {
+        if (userData) { //유저가 로그인 상태일시, 해당 유저의 루틴 데이터 전송
             data = await Routine.find({ createdBy: userData._id });
         }
-        else {
+        else { //비로그인 상태일시, 모든 루틴 데이터 전송
             data = await Routine.find();
         }
         res.json(data);

@@ -1,21 +1,23 @@
 import { useRef, useEffect, useState } from "react";
-import { Formik, Field, Form, useFormik } from "formik"
+import { useFormik } from "formik"
 import * as yup from "yup"
 import { v4 as uuidv4 } from 'uuid';
 
-function AddForm({ setAddForm, setRoutines, routines }) {
-    const inputRef = useRef();
+function AddForm({ setAddForm, setRoutines }) {
 
+    //폼이 열리면, 제목란에 자동 포커스 되어 유저가 바로 입력할 수 있도록 구현
+    const inputRef = useRef();
     useEffect(() => {
         inputRef.current.focus();
     }, [])
 
+    //esc키로 폼을 닫을 수 있도록 구현
     const handleKeyDown = (e) => {
         if (e.key === 'Escape') {
             setAddForm(false);
         }
     };
-    useEffect(() => {
+    useEffect(() => { //폼을 닫은 후에도 이벤트가 남아서 램을 낭비하지 않도록 이벤트를 삭제
         document.addEventListener('keydown', handleKeyDown);
         return () => {
             document.removeEventListener('keydown', handleKeyDown);
@@ -34,45 +36,7 @@ function AddForm({ setAddForm, setRoutines, routines }) {
     });
     const week = Object.entries(weekCheck)
 
-
-    const handleWeekCheck = (e) => {
-        const copy = { ...weekCheck };
-        copy[e.target.id] = e.target.checked;
-        setButtonUiController(Object.values(copy).includes(true))
-        setWeekCheck(copy)
-    }
-
-    const [buttonUiController, setButtonUiController] = useState(false)
-
-    // const handleSubmit = async (e) => {
-    //     e.preventDefault();
-    //     try {
-    //         const formData = new FormData(e.target);
-    //         console.log(formData)
-    //         const data = {}
-    //         for (const [key, value] of formData) {
-    //             data[key] = value
-    //         }
-    //         data['weekCheck'] = weekCheck;
-    //         await fetch(`${process.env.REACT_APP_SERVER_URL}/routine`, {
-    //             method: 'POST',
-    //             headers: {
-    //                 "Content-Type": "application/json"
-    //             },
-    //             body: JSON.stringify(data)
-    //         });
-    //         // const res = await fetch(`${process.env.REACT_APP_SERVER_URL}/routine`)
-    //         // const resData = await res.json();
-    //         const newRoutines = [...routines, data]
-    //         newRoutines.sort((a, b) => new Date("1970/01/01 " + a.time) - new Date("1970/01/01 " + b.time))
-    //         await setRoutines(newRoutines);
-
-    //         closeModal();
-    //     } catch (error) {
-    //         console.error(error);
-    //     }
-    // }
-
+    //유효성 검증
     const validationSchema = yup.object().shape({
         title: yup
             .string()
@@ -102,6 +66,7 @@ function AddForm({ setAddForm, setRoutines, routines }) {
             )
     })
 
+    //폼의 기본값 설정
     const formik = useFormik({
         initialValues: {
             title: '',
@@ -128,7 +93,7 @@ function AddForm({ setAddForm, setRoutines, routines }) {
                     credentials: 'include'
                 });
 
-                setTimeout(async () => {
+                setTimeout(async () => { //데이터를 저장한 후, 저장한 데이터를 ui에 반영
                     const res = await fetch(`${process.env.REACT_APP_SERVER_URL}/routine`, {
                         headers: {
                             'Content-Type': 'application/json'
