@@ -4,7 +4,6 @@ import AuthForm from '../components/AuthForm';
 import SignInContext from '../contexts/SignInCheckContext/SignInCheckContext';
 
 
-
 function Header() {
 
     const [authForm, setAuthForm] = useState(false)
