@@ -4,6 +4,7 @@ import Card from '../components/Card';
 import { useEffect, useState, useContext } from 'react';
 import AddForm from '../components/AddForm';
 import EditForm from '../components/EditForm';
+import AuthOverlay from '../components/AuthOverlay';
 import SignInContext from '../contexts/SignInCheckContext/SignInCheckContext';
 
 function Service() {
@@ -60,6 +61,7 @@ function Service() {
                 const data = await res.json();
                 data.sort((a, b) => new Date(`1970/01/01 ${a.time}`) - new Date(`1970/01/01 ${b.time}`));
                 setRoutines(data);
+
             } catch (error) {
                 console.error(error.message);
             }
@@ -89,6 +91,7 @@ function Service() {
 
     return (
         <>
+            {isSignIn === false && <AuthOverlay />}
             {addForm === true && <AddForm setAddForm={setAddForm} setRoutines={setRoutines} routines={routines} />}
             {editForm === true && <EditForm setEditForm={setEditForm} setRoutines={setRoutines} routines={routines} todayRoutines={todayRoutines} selectedCardId={selectedCardId} />}
             <Header />

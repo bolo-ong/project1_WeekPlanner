@@ -1,16 +1,29 @@
 import { v4 as uuidv4 } from 'uuid';
+import { useContext } from 'react';
+import SignInContext from '../contexts/SignInCheckContext/SignInCheckContext';
+
 
 function Card({ setAddForm, todayRoutines, setEditForm, setSelectedCardId }) {
+    const { isSignIn, setIsSignIn } = useContext(SignInContext);
+
     return (
         <>
             <div className="w-[80vw] flex flex-wrap -m-4 px-5 py-10 mx-auto">
                 <div className="p-4 max-sm:w-full sm:w-1/2 md:w-1/3 lg:w-1/4" >
-                    <div className="h-48 border-dotted border-4 hover:scale-101 rounded-lg h-full p-6 shadow-lg hover:shadow-indigo-500/30 cursor-pointer"
-                        onClick={() => {
-                            setAddForm(true)
-                        }}>
-                        <button className='relative top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 text-white bg-indigo-500 px-2 rounded-full text-lg cursor-pointer'>+</button>
-                    </div>
+                    {
+                        isSignIn ?
+                            (<div className="h-48 border-dotted border-4 hover:scale-101 rounded-lg h-full p-6 shadow-lg hover:shadow-indigo-500/30 cursor-pointer"
+                                onClick={() => {
+                                    setAddForm(true)
+                                }}>
+                                <button className='relative top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 text-white bg-indigo-500 px-2 rounded-full text-lg cursor-pointer'
+                                    style={{ pointerEvents: 'none' }}>+</button>
+                            </div>)
+                            : (<div className="h-48 border-dotted border-4 hover:scale-101 rounded-lg h-full p-6 shadow-lg hover:shadow-indigo-500/30 cursor-pointer">
+                                <button className='relative top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 text-white bg-indigo-500 px-2 rounded-full text-lg cursor-pointer'
+                                    style={{ pointerEvents: 'none' }}>+</button>
+                            </div>)
+                    }
                 </div>
 
                 {

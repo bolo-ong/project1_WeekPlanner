@@ -107,7 +107,7 @@ function AuthForm({ setAuthForm }) {
 
     return (
         <div>
-            <div className="fixed w-full h-full z-10">
+            <div className="fixed w-full h-full z-30">
                 <div className="w-full h-full bg-black opacity-80"
                     onMouseDown={() => {
                         setAuthForm(false)

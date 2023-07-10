@@ -8,11 +8,16 @@ module.exports = {
     extend: {
       margin: {
         '45px': '45px',
-        '90vh': '90vh',
-        '80vw': '80vw'
       },
       scale: {
         '101': '1.01',
+      },
+      width: {
+        '80vw': '80vw',
+      },
+      minHeight: {
+        '90vh': '90vh',
+        '80vh': '85vh',
       },
     },
   },
