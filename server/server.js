@@ -23,9 +23,14 @@ app.listen(port, () => {
 });
 
 app.use(cors({
-    origin: `http://localhost:3000`,
+    origin: [
+        'http://localhost:3000',
+        'http://weekplanner.kro.kr',
+        'http://www.weekplanner.kro.kr',
+        'https://weekplanner-394708.du.r.appspot.com'],
     credentials: true
 }));
+
 app.use(express.json());
 app.use(cookieParser());
 app.use('/', routes);
