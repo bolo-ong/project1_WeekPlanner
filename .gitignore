@@ -33,3 +33,4 @@ yarn-error.log*
 /models/
 /controllers/
 server/schemas/index.js
+app.yaml
