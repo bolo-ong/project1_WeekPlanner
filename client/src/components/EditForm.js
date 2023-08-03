@@ -13,7 +13,7 @@ function EditForm({ setEditForm, setRoutines, selectedCardId }) {
             if (selectedCardId) {
                 try {
                     const id = selectedCardId
-                    const res = await fetch(`${process.env.REACT_APP_SERVER_URL}/routine/${id}`, {
+                    const res = await fetch(`${process.env.REACT_APP_SERVER_URL}/api/routine/${id}`, {
                         headers: {
                             'Content-Type': 'application/json'
                         },
@@ -120,7 +120,7 @@ function EditForm({ setEditForm, setRoutines, selectedCardId }) {
             const { action, ...requestData } = values;
             try {
                 if (values.action === 'update') {
-                    await fetch(`${process.env.REACT_APP_SERVER_URL}/routine/${selectedCardId}`, {
+                    await fetch(`${process.env.REACT_APP_SERVER_URL}/api/routine/${selectedCardId}`, {
                         method: 'PUT',
                         headers: {
                             'Content-Type': 'application/json'
@@ -129,7 +129,7 @@ function EditForm({ setEditForm, setRoutines, selectedCardId }) {
                         credentials: 'include'
                     });
                 } else if (values.action === 'delete') {
-                    await fetch(`${process.env.REACT_APP_SERVER_URL}/routine/${selectedCardId}`, {
+                    await fetch(`${process.env.REACT_APP_SERVER_URL}/api/routine/${selectedCardId}`, {
                         method: 'delete',
                         headers: {
                             'Content-Type': 'application/json'
@@ -138,7 +138,7 @@ function EditForm({ setEditForm, setRoutines, selectedCardId }) {
                     })
                 }
                 setTimeout(async () => { //데이터를 저장한 후, 저장한 데이터를 ui에 반영
-                    const res = await fetch(`${process.env.REACT_APP_SERVER_URL}/routine`, {
+                    const res = await fetch(`${process.env.REACT_APP_SERVER_URL}/api/routine`, {
                         headers: {
                             'Content-Type': 'application/json'
                         },

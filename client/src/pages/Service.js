@@ -52,7 +52,7 @@ function Service() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await fetch(`${process.env.REACT_APP_SERVER_URL}/routine`, {
+                const res = await fetch(`${process.env.REACT_APP_SERVER_URL}/api/routine`, {
                     headers: {
                         'Content-Type': 'application/json'
                     },

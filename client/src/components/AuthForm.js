@@ -57,7 +57,7 @@ function AuthForm({ setAuthForm }) {
             const { action, ...requestData } = values;
             try {
                 if (values.action === 'signIn') {
-                    const res = await fetch(`${process.env.REACT_APP_SERVER_URL}/user/signin`, {
+                    const res = await fetch(`${process.env.REACT_APP_SERVER_URL}/api/user/signin`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
@@ -79,7 +79,7 @@ function AuthForm({ setAuthForm }) {
                     }
                 }
                 if (values.action === 'signUp') {
-                    const res = await fetch(`${process.env.REACT_APP_SERVER_URL}/user/signup`, {
+                    const res = await fetch(`${process.env.REACT_APP_SERVER_URL}/api/user/signup`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'

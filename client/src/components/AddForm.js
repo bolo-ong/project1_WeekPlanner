@@ -84,7 +84,7 @@ function AddForm({ setAddForm, setRoutines }) {
         },
         onSubmit: async (values) => {
             try {
-                await fetch(`${process.env.REACT_APP_SERVER_URL}/routine`, {
+                await fetch(`${process.env.REACT_APP_SERVER_URL}/api/routine`, {
                     method: 'POST',
                     headers: {
                         "Content-Type": "application/json"
@@ -94,7 +94,7 @@ function AddForm({ setAddForm, setRoutines }) {
                 });
 
                 setTimeout(async () => { //데이터를 저장한 후, 저장한 데이터를 ui에 반영
-                    const res = await fetch(`${process.env.REACT_APP_SERVER_URL}/routine`, {
+                    const res = await fetch(`${process.env.REACT_APP_SERVER_URL}/api/routine`, {
                         headers: {
                             'Content-Type': 'application/json'
                         },

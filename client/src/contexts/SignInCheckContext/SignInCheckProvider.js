@@ -8,7 +8,7 @@ function SignInProvider({ children }) {
     useEffect(() => {
         const signInCheck = async () => {
             try {
-                const res = await fetch(`${process.env.REACT_APP_SERVER_URL}/user/signin/success`, {
+                const res = await fetch(`${process.env.REACT_APP_SERVER_URL}/api/user/signin/success`, {
                     headers: {
                         'Content-Type': 'application/json'
                     },

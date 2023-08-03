@@ -32,7 +32,7 @@ function Header() {
                                         <div className="mr-5 hover:text-gray-900 cursor-pointer"
                                             onClick={async () => {
                                                 try {
-                                                    await fetch(`${process.env.REACT_APP_SERVER_URL}/user/signout`, {
+                                                    await fetch(`${process.env.REACT_APP_SERVER_URL}/api/user/signout`, {
                                                         headers: {
                                                             'Content-Type': 'application/json'
                                                         },
