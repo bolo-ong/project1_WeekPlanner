@@ -27,7 +27,8 @@ app.use(cors({
         'http://localhost:3000',
         'http://weekplanner.kro.kr',
         'http://www.weekplanner.kro.kr',
-        'https://weekplanner-394708.du.r.appspot.com'],
+        'https://weekplanner-394810.du.r.appspot.com',
+        'https://www.weekplanner-394810.du.r.appspot.com'],
     credentials: true
 }));
 
@@ -42,6 +43,6 @@ app.get('/', function (req, res) {
     res.sendFile(path.join(__dirname, '..', 'client', 'build', 'index.html'));
 });
 
-app.get('*', function (req, res) {
+app.use(function (req, res) {
     res.sendFile(path.join(__dirname, '..', 'client', 'build', 'index.html'));
 });
