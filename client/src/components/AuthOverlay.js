@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import AuthForm from '../components/AuthForm';
+import AuthForm from './AuthForm';
 
 function AuthOverlay() {
     const [authForm, setAuthForm] = useState(false)

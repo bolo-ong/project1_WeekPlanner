@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useState } from 'react';
-import AuthForm from '../components/AuthForm';
+import AuthForm from './AuthForm';
 import SignInContext from '../contexts/SignInCheckContext/SignInCheckContext';
 
 

@@ -26,7 +26,9 @@ app.use(cors({
     origin: [
         'http://localhost:3000',
         'http://weekplanner.kro.kr',
+        'https://weekplanner.kro.kr',
         'http://www.weekplanner.kro.kr',
+        'https://www.weekplanner.kro.kr',
         'https://weekplanner-394810.du.r.appspot.com',
         'https://www.weekplanner-394810.du.r.appspot.com'],
     credentials: true
@@ -37,12 +39,12 @@ app.use(cookieParser());
 app.use('/api', routes);
 
 
-app.use(express.static(path.join(__dirname, '..', 'client', 'build')));
+app.use(express.static(path.join(__dirname, 'build')));
 
 app.get('/', function (req, res) {
-    res.sendFile(path.join(__dirname, '..', 'client', 'build', 'index.html'));
+    res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
 app.use(function (req, res) {
-    res.sendFile(path.join(__dirname, '..', 'client', 'build', 'index.html'));
+    res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
