@@ -11,9 +11,14 @@ const refreshToken = async (req, res) => {
         const token = req.cookies.refreshToken
         const data = jwt.verify(token, REFRESH_TOKEN_SECRET)
 
-        const accessToken = jwt.sign({ userId: data.userId }, ACCESS_TOKEN_SECRET, { expiresIn: '4h' });
+        const accessToken = jwt.sign({ userId: data.userId }, ACCESS_TOKEN_SECRET, { expiresIn: '30m' });
+        const refreshToken = jwt.sign({ userId: data.userId }, REFRESH_TOKEN_SECRET, { expiresIn: '24h' });
 
         res.cookie("accessToken", accessToken, {
+            secure: false,
+            httpOnly: true,
+        })
+        res.cookie("refreshToken", refreshToken, {
             secure: false,
             httpOnly: true,
         })
@@ -38,7 +43,7 @@ const signUp = async (req, res) => {
         const user = new User({ userId: userId, pw: hashedPw })
         await user.save();
 
-        const accessToken = jwt.sign({ userId: user.userId }, ACCESS_TOKEN_SECRET, { expiresIn: '4h' });
+        const accessToken = jwt.sign({ userId: user.userId }, ACCESS_TOKEN_SECRET, { expiresIn: '30m' });
         const refreshToken = jwt.sign({ userId: user.userId }, REFRESH_TOKEN_SECRET, { expiresIn: '24h' });
 
         res.cookie("accessToken", accessToken, {
@@ -70,7 +75,7 @@ const signIn = async (req, res) => {
             return res.status(400).json({ message: '입력하신 비밀번호를 다시 확인해 주세요.' })
         }
 
-        const accessToken = jwt.sign({ userId: exitingUser.userId }, ACCESS_TOKEN_SECRET, { expiresIn: '4h' });
+        const accessToken = jwt.sign({ userId: exitingUser.userId }, ACCESS_TOKEN_SECRET, { expiresIn: '30m' });
         const refreshToken = jwt.sign({ userId: exitingUser.userId }, REFRESH_TOKEN_SECRET, { expiresIn: '24h' });
 
         res.cookie("accessToken", accessToken, {
