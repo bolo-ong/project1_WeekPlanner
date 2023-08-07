@@ -5,9 +5,11 @@ import Footer from '../components/Footer';
 function Main() {
     return (
         <>
-            <Layout />
-            <Hero />
-            <Footer />
+            <div className="h-screen flex flex-col justify-between">
+                <Layout />
+                <Hero />
+                <Footer />
+            </div>
         </>
     )
 }

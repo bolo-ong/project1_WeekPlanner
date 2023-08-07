@@ -1,5 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
 import './App.css';
+import './index.css';
 import Service from './pages/Service';
 import Main from './pages/Main';
 import SignInProvider from './contexts/SignInCheckContext/SignInCheckProvider';
