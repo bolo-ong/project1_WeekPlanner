@@ -10,6 +10,12 @@ const userSchema = new Schema({
     pw: {
         type: String,
         required: true
+    },
+    refreshToken: {
+        type: [String]
+    }, hacked: {
+        type: Boolean,
+        default: false
     }
 }, { timestamps: true });
 

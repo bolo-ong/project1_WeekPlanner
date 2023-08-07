@@ -6,45 +6,18 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 
-const refreshToken = async (req, res) => {
-    try {
-        const token = req.cookies.refreshToken
-        const data = jwt.verify(token, REFRESH_TOKEN_SECRET)
-
-        const accessToken = jwt.sign({ userId: data.userId }, ACCESS_TOKEN_SECRET, { expiresIn: '30m' });
-        const refreshToken = jwt.sign({ userId: data.userId }, REFRESH_TOKEN_SECRET, { expiresIn: '24h' });
-
-        res.cookie("accessToken", accessToken, {
-            secure: false,
-            httpOnly: true,
-        })
-        res.cookie("refreshToken", refreshToken, {
-            secure: false,
-            httpOnly: true,
-        })
-
-        res.sendStatus(200);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-}
-
-
 const signUp = async (req, res) => {
-    const { userId, pw } = req.body
+    const { inputId, inputPw } = req.body
     try {
-        const exitingUser = await User.findOne({ userId: userId })
-        if (exitingUser) {
+        const existingUser = await User.findOne({ userId: inputId })
+        if (existingUser) {
             return res.status(400).json({ message: '이미 사용중인 아이디 입니다.' })
         }
 
-        const hashedPw = await bcrypt.hash(pw, 10);
+        const hashedPw = await bcrypt.hash(inputPw, 10);
 
-        const user = new User({ userId: userId, pw: hashedPw })
-        await user.save();
-
-        const accessToken = jwt.sign({ userId: user.userId }, ACCESS_TOKEN_SECRET, { expiresIn: '30m' });
-        const refreshToken = jwt.sign({ userId: user.userId }, REFRESH_TOKEN_SECRET, { expiresIn: '24h' });
+        const accessToken = jwt.sign({ userId: inputId }, ACCESS_TOKEN_SECRET, { expiresIn: '10s' });
+        const refreshToken = jwt.sign({ userId: inputId }, REFRESH_TOKEN_SECRET, { expiresIn: '30s' });
 
         res.cookie("accessToken", accessToken, {
             secure: false,
@@ -54,6 +27,12 @@ const signUp = async (req, res) => {
             secure: false,
             httpOnly: true,
         })
+
+        await new User({
+            userId: inputId,
+            pw: hashedPw,
+            refreshToken: [refreshToken]
+        }).save();
 
         res.sendStatus(200);
     } catch (error) {
@@ -62,21 +41,21 @@ const signUp = async (req, res) => {
 };
 
 const signIn = async (req, res) => {
-    const { userId, pw } = req.body
+    const { inputId, inputPw } = req.body
     try {
-        const exitingUser = await User.findOne({ userId: userId })
-        if (!exitingUser) {
+        const signInRequestUser = await User.findOne({ userId: inputId })
+        if (!signInRequestUser) {
             return res.status(404).json({ message: '입력하신 아이디를 다시 확인해 주세요.' })
         }
 
-        const matchPw = await bcrypt.compare(pw, exitingUser.pw)
+        const matchPw = await bcrypt.compare(inputPw, signInRequestUser.pw)
 
         if (!matchPw) {
             return res.status(400).json({ message: '입력하신 비밀번호를 다시 확인해 주세요.' })
         }
 
-        const accessToken = jwt.sign({ userId: exitingUser.userId }, ACCESS_TOKEN_SECRET, { expiresIn: '30m' });
-        const refreshToken = jwt.sign({ userId: exitingUser.userId }, REFRESH_TOKEN_SECRET, { expiresIn: '24h' });
+        const accessToken = jwt.sign({ userId: signInRequestUser.userId }, ACCESS_TOKEN_SECRET, { expiresIn: '10s' });
+        const refreshToken = jwt.sign({ userId: signInRequestUser.userId }, REFRESH_TOKEN_SECRET, { expiresIn: '30s' });
 
         res.cookie("accessToken", accessToken, {
             secure: false,
@@ -86,6 +65,11 @@ const signIn = async (req, res) => {
             secure: false,
             httpOnly: true,
         })
+
+        await User.updateOne(
+            { userId: signInRequestUser.userId },
+            { $push: { refreshToken: refreshToken } }
+        );
 
         res.sendStatus(200);
     } catch (error) {
@@ -95,22 +79,54 @@ const signIn = async (req, res) => {
 
 const signInSuccess = async (req, res) => {
     try {
-        const accessToken = req.cookies.accessToken
-        const data = jwt.verify(accessToken, ACCESS_TOKEN_SECRET)
+        const existingAccessToken = req.cookies.accessToken
 
-        const userData = await User.findOne({ userId: data.userId })
-        const { pw, ...others } = userData.toObject();
+        if (!existingAccessToken) {
+            const existingRefreshToken = req.cookies.refreshToken;
 
-        res.status(200).json(others);
+            if (existingRefreshToken) {
+                const refreshTokenData = jwt.verify(existingRefreshToken, REFRESH_TOKEN_SECRET);
+
+                const accessToken = jwt.sign({ userId: refreshTokenData.userId }, ACCESS_TOKEN_SECRET, { expiresIn: '10s' });
+                const refreshToken = jwt.sign({ userId: refreshTokenData.userId }, REFRESH_TOKEN_SECRET, { expiresIn: '30s' });
+
+                res.cookie("accessToken", accessToken, {
+                    secure: false,
+                    httpOnly: true,
+                });
+                res.cookie("refreshToken", refreshToken, {
+                    secure: false,
+                    httpOnly: true,
+                });
+
+                await User.updateOne(
+                    { userId: refreshTokenData.userId },
+                    {
+                        $pull: { refreshToken: existingRefreshToken },
+                        $push: { refreshToken: refreshToken }
+                    }
+                );
+            } else {
+                return res.status(401).json({ message: error.message });
+            }
+        }
+        res.sendStatus(200);
     } catch (error) {
-        refreshToken(req, res);
+        res.status(500).json({ message: error.message });
     }
 }
 
-const signOut = (req, res) => {
+const signOut = async (req, res) => {
     try {
+        const existingRefreshToken = req.cookies.refreshToken
+        const refreshTokenData = jwt.verify(existingRefreshToken, REFRESH_TOKEN_SECRET)
+        const signOutRequestUser = await User.findOne({ userId: refreshTokenData.userId })
+
+        await signOutRequestUser.updateOne({ $pull: { refreshToken: existingRefreshToken } });
+
         res.clearCookie('accessToken');
         res.clearCookie('refreshToken');
+
 
         res.sendStatus(200);
     }

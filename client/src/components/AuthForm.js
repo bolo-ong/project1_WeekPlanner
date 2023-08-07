@@ -31,7 +31,7 @@ function AuthForm({ setAuthForm }) {
 
     //유효성 검증
     const validationSchema = yup.object().shape({
-        userId: yup
+        inputId: yup
             .string()
             .required('아이디를 입력해 주세요.')
             .min(4, '4자 이상 입력해 주세요.')
@@ -39,7 +39,7 @@ function AuthForm({ setAuthForm }) {
             .matches(/^[a-z0-9_-]+$/, '영문 소문자, 숫자, 밑줄(_), 대시(-)만 사용할 수 있습니다.')
             .matches(/[a-z]/, '최소한 한 글자의 영문 소문자가 포함되어야 합니다.'),
 
-        pw: yup
+        inputPw: yup
             .string()
             .required('비밀번호를 입력해 주세요.')
             .max(20, '20자 이내로 작성해 주세요.')
@@ -48,8 +48,8 @@ function AuthForm({ setAuthForm }) {
     //폼의 기본값 설정
     const formik = useFormik({
         initialValues: {
-            userId: '',
-            pw: '',
+            inputId: '',
+            inputPw: '',
         },
 
         //signIn버튼과 singUp버튼을 클릭 시, 로그인 or 회원가입 기능 구현
@@ -71,11 +71,11 @@ function AuthForm({ setAuthForm }) {
                     } else if (res.status === 404) { //id 오류 시 에러메세지 생성
                         const data = await res.json();
                         const errorMessage = data.message;
-                        formik.setFieldError('userId', errorMessage);
+                        formik.setFieldError('inputId', errorMessage);
                     } else if (res.status === 400) {//pw 오류 시 에러메세지 생성
                         const data = await res.json();
                         const errorMessage = data.message;
-                        formik.setFieldError('pw', errorMessage);
+                        formik.setFieldError('inputPw', errorMessage);
                     }
                 }
                 if (values.action === 'signUp') {
@@ -93,7 +93,7 @@ function AuthForm({ setAuthForm }) {
                     } else if (!res.ok) {
                         const data = await res.json();
                         const errorMessage = data.message;
-                        formik.setFieldError('userId', errorMessage);
+                        formik.setFieldError('inputId', errorMessage);
                     }
                 }
             } catch (error) {
@@ -126,26 +126,26 @@ function AuthForm({ setAuthForm }) {
                                     maxLength="10"
                                     placeholder="아이디"
                                     type="text"
-                                    name="userId"
-                                    value={formik.values.userId}
+                                    name="inputId"
+                                    value={formik.values.inputId}
                                     onChange={formik.handleChange}
                                     onBlur={formik.handleBlur}
                                 />
-                                {formik.touched.userId && formik.errors.userId && <p className="w-72 text-sm text-red-400 ml-1">{formik.errors.userId}</p>}
+                                {formik.touched.inputId && formik.errors.inputId && <p className="w-72 text-sm text-red-400 ml-1">{formik.errors.inputId}</p>}
                             </div>
                             <div>
                                 <input className="mt-3 p-1 w-full bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block rounded-md focus:ring-1"
                                     maxLength="20"
                                     placeholder="비밀번호"
                                     type={showPw ? 'text' : 'password'}
-                                    name="pw"
-                                    value={formik.values.pw}
+                                    name="inputPw"
+                                    value={formik.values.inputPw}
                                     onChange={formik.handleChange}
                                     onBlur={formik.handleBlur}
                                 />
                                 <p className="inline-block text-sm ml-1 cursor-pointer hover:scale-105 hover:text-blue-500"
                                     onClick={() => { setShowPw(!showPw) }}>  {showPw ? '비밀번호 숨기기' : '비밀번호 보이기'}</p>
-                                {formik.touched.pw && formik.errors.pw && <p className="text-sm text-red-400 ml-1">{formik.errors.pw}</p>}
+                                {formik.touched.inputPw && formik.errors.inputPw && <p className="text-sm text-red-400 ml-1">{formik.errors.inputPw}</p>}
                             </div>
 
 

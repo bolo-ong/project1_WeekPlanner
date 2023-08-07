@@ -8,7 +8,7 @@ const auth = async (req, res, next) => {
         if (token) {
             const data = jwt.verify(token, ACCESS_TOKEN_SECRET)
             const userData = await User.findOne({ userId: data.userId })
-            const { pw, ...others } = userData.toObject();
+            const { pw, refreshToken, ...others } = userData.toObject();
 
             req.userData = others;
         }
