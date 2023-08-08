@@ -72,7 +72,7 @@ function Service() {
     //루틴 데이터중에 체크박스에 체크된 요일의 데이터만 가져옴
     useEffect(() => {
         const filteredRoutines = routines.filter(routine =>
-            routine.weekCheck && Object.keys(routine.weekCheck).some(day => weekCheck[day] && routine.weekCheck[day])
+            Object.keys(routine.weekCheck).some(day => weekCheck[day] && routine.weekCheck[day])
         );
         setTodayRoutines(filteredRoutines);
     }, [routines, weekCheck]);
