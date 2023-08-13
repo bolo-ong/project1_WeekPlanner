@@ -6,7 +6,7 @@ https://weekplanner.kro.kr/
 
 
 # Week Planner
-주간 계획을 관리하고 시각화하는 웹 애플리케이션입니다. 이 애플리케이션은 React와 Node.js로 개발되었습니다.
+WeekPlanner는 개인의 주간 루틴을 계획하고 관리하는 데 도움을 주는 사이트 입니다.
 
 
 https://github.com/bolo-ong/project1_WeekPlanner/assets/111353138/61b075fc-b0d4-4420-bf14-a0cc66c81d51
