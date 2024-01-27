@@ -1,4 +1,3 @@
-https://weekplanner.kro.kr/
 
 
 </br>
